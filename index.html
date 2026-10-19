@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unblocked Game Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <header class="topbar">
+      <div class="logo-wrap">
+        <span class="logo-dot"></span>
+        <span>GameLoop</span>
+      </div>
+      <nav class="nav">
+        <a href="#">Home</a>
+        <a href="#">Popular</a>
+        <a href="#">Arcade</a>
+      </nav>
+    </header>
+
+    <main class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">UNBLOCKED PLAY ZONE</p>
+        <h1>Find your next game in seconds.</h1>
+        <p class="subtitle">
+          Tap the button and get a fresh set of random unblocked game picks every time.
+        </p>
+
+        <button id="findGamesBtn" class="primary-btn">Find Games</button>
+      </div>
+
+      <div class="hero-panel">
+        <div class="panel-top">
+          <span class="status-pill">Live Picks</span>
+          <span class="status-text">Randomized</span>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini-box">
+            <span class="mini-label">Available</span>
+            <strong id="availableCount">0</strong>
+          </div>
+          <div class="mini-box">
+            <span class="mini-label">Categories</span>
+            <strong>8+</strong>
+          </div>
+          <div class="mini-box">
+            <span class="mini-label">Fresh</span>
+            <strong>Now</strong>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <section class="games-section">
+      <div class="section-header">
+        <h2>Recommended right now</h2>
+        <span id="gameCountLabel">0 games loaded</span>
+      </div>
+
+      <div id="gameGrid" class="game-grid" aria-live="polite"></div>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>
