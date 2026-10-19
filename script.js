@@ -10,69 +10,116 @@ const gameCategories = [
   "Platformer",
   "Simulation",
   "Music",
-  "Idle"
+  "Idle",
+  "Horror"
 ];
 
-const adjectives = [
-  "Neon",
-  "Turbo",
-  "Shadow",
-  "Pixel",
-  "Storm",
-  "Sky",
-  "Golden",
-  "Crimson",
-  "Frost",
-  "Blaze",
-  "Vortex",
-  "Mystic",
-  "Wild",
-  "Rapid",
-  "Cosmic",
-  "Rocket",
-  "Dragon",
-  "Nova",
-  "Secret",
-  "Solar"
-];
+const categoryKeywords = {
+  racing: ["race", "racing", "drift", "speed", "moto", "turbo", "car", "road", "track", "stunt"],
+  horror: ["horror", "scary", "dark", "ghost", "monster", "night", "shadow", "zombie", "creepy", "haunted", "terror"],
+  action: ["action", "battle", "fight", "arena", "boss", "attack", "combat", "slash", "strike"],
+  adventure: ["adventure", "quest", "explore", "journey", "world", "castle", "kingdom", "missions", "epic"],
+  puzzle: ["puzzle", "maze", "logic", "brain", "memory", "match", "tiles", "solve", "challenge"],
+  sports: ["sports", "soccer", "basketball", "football", "tennis", "golf", "goal", "stadium", "cup"],
+  shooter: ["shooter", "aim", "shoot", "laser", "gun", "sniper", "target", "battlefield", "turret"],
+  platformer: ["platform", "jump", "runner", "bounce", "climb", "dodge", "spring"],
+  simulation: ["sim", "simulator", "builder", "city", "farm", "craft", "tycoon", "life", "vehicle"],
+  music: ["music", "rhythm", "beat", "dance", "song", "notes", "groove"],
+  idle: ["idle", "clicker", "tap", "upgrade", "incremental", "resource", "progress"],
+  arcade: ["arcade", "coin", "classic", "quick", "retro", "space", "neon"]
+};
 
-const nouns = [
-  "Runner",
-  "Quest",
-  "Sprint",
-  "Arena",
-  "Strike",
-  "Racer",
-  "Dash",
-  "Jump",
-  "Blitz",
-  "Pilot",
-  "Drift",
-  "Legend",
-  "Battle",
-  "Kingdom",
-  "Rift",
-  "Storm",
-  "Orbit",
-  "Chase",
-  "Cannon",
-  "Planet"
-];
-
-const suffixes = [
-  "",
-  " 2",
-  " 3D",
-  " Rush",
-  " X",
-  " Deluxe",
-  " World",
-  " Remix",
-  " Max",
-  " Infinity",
-  " Challenge",
-  " DX"
-];
+const titleParts = {
+  prefix: [
+    "Neon",
+    "Turbo",
+    "Shadow",
+    "Pixel",
+    "Storm",
+    "Sky",
+    "Golden",
+    "Crimson",
+    "Frost",
+    "Blaze",
+    "Vortex",
+    "Mystic",
+    "Wild",
+    "Rapid",
+    "Cosmic",
+    "Rocket",
+    "Dragon",
+    "Nova",
+    "Secret",
+    "Solar",
+    "Midnight",
+    "Desert",
+    "Jungle",
+    "Forest",
+    "Frozen",
+    "Cyber",
+    "Metal",
+    "Glitch",
+    "Electric",
+    "Night",
+    "Thunder",
+    "Lunar"
+  ],
+  noun: [
+    "Runner",
+    "Quest",
+    "Sprint",
+    "Arena",
+    "Strike",
+    "Racer",
+    "Dash",
+    "Jump",
+    "Blitz",
+    "Pilot",
+    "Drift",
+    "Legend",
+    "Battle",
+    "Kingdom",
+    "Rift",
+    "Storm",
+    "Orbit",
+    "Chase",
+    "Cannon",
+    "Planet",
+    "Warden",
+    "Guardian",
+    "Treasure",
+    "Maze",
+    "Marauder",
+    "Crusader",
+    "Talon",
+    "Pulse",
+    "Vector",
+    "Hawk",
+    "Titan",
+    "Saber",
+    "Rogue"
+  ],
+  suffix: [
+    "",
+    "2",
+    "3D",
+    "Rush",
+    "X",
+    "Deluxe",
+    "World",
+    "Remix",
+    "Max",
+    "Infinity",
+    "Challenge",
+    "DX",
+    "Go",
+    "Arena",
+    "League",
+    "Survival",
+    "Trials",
+    "Rush"
+  ]
+};
 
 const siteLinks = [
   {
@@ -95,28 +142,35 @@ const siteLinks = [
   }
 ];
 
-function generateGameLibrary(count = 1200) {
+function generateGameLibrary(count = 2500) {
   const games = [];
 
   for (let i = 0; i < count; i++) {
-    const adjective = adjectives[i % adjectives.length];
-    const noun = nouns[(i * 3) % nouns.length];
-    const suffix = suffixes[(i * 5) % suffixes.length];
-    const category = gameCategories[(i * 7) % gameCategories.length];
+    const prefix = titleParts.prefix[i % titleParts.prefix.length];
+    const noun = titleParts.noun[(i * 3) % titleParts.noun.length];
+    const suffix = titleParts.suffix[(i * 5) % titleParts.suffix.length];
+    const category = gameCategories[i % gameCategories.length];
+    const title = `${prefix} ${noun}${suffix}`.trim();
+
+    const keywords = categoryKeywords[category.toLowerCase()] || [category.toLowerCase()];
+    const searchText = `${title} ${category} ${keywords.join(" ")}`.toLowerCase();
 
     games.push({
-      title: `${adjective} ${noun}${suffix}`.trim(),
+      id: i + 1,
+      title,
       genre: category,
       rating: (Math.random() * 1.2 + 4.0).toFixed(1),
       difficulty: ["Easy", "Medium", "Hard"][i % 3],
-      status: "Unblocked"
+      status: "Unblocked",
+      tags: keywords,
+      searchText
     });
   }
 
   return games;
 }
 
-const gameLibrary = generateGameLibrary(1200);
+const gameLibrary = generateGameLibrary(2500);
 const grid = document.getElementById("gameGrid");
 const button = document.getElementById("findGamesBtn");
 const availableCount = document.getElementById("availableCount");
@@ -132,6 +186,62 @@ function shuffleGames(items) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+function normalizeText(value) {
+  return String(value || "").toLowerCase().trim();
+}
+
+function getBestMatchScore(game, query) {
+  const normQuery = normalizeText(query);
+  if (!normQuery) return 0;
+
+  let score = 0;
+  const title = normalizeText(game.title);
+  const tags = game.tags.map((tag) => normalizeText(tag));
+  const genre = normalizeText(game.genre);
+
+  if (title.includes(normQuery)) score += 20;
+  if (genre.includes(normQuery)) score += 18;
+  tags.forEach((tag) => {
+    if (tag.includes(normQuery)) score += 12;
+    if (normQuery.includes(tag)) score += 6;
+  });
+
+  const queryWords = normQuery.split(/\s+/).filter(Boolean);
+  queryWords.forEach((word) => {
+    if (title.includes(word)) score += 8;
+    if (genre.includes(word)) score += 7;
+    if (tags.some((tag) => tag.includes(word))) score += 5;
+  });
+
+  return score;
+}
+
+function getRecommendedGames(query = "") {
+  const cleanQuery = normalizeText(query);
+  if (!cleanQuery) {
+    return shuffleGames(gameLibrary).slice(0, 12);
+  }
+
+  const scored = gameLibrary
+    .map((game) => ({
+      game,
+      score: getBestMatchScore(game, cleanQuery)
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 12)
+    .map((entry) => entry.game);
+
+  if (scored.length) return scored;
+
+  const fallback = gameLibrary.filter((game) => {
+    const haystack = `${game.title} ${game.genre} ${game.tags.join(" ")}`.toLowerCase();
+    return haystack.includes(cleanQuery.split(" ")[0]);
+  });
+
+  return shuffleGames(fallback.length ? fallback : gameLibrary).slice(0, 12);
 }
 
 function renderGames(selectedGames) {
@@ -172,7 +282,7 @@ function renderGames(selectedGames) {
 function renderSearchResults(query) {
   if (!searchResults) return;
 
-  const cleanQuery = query.trim().toLowerCase();
+  const cleanQuery = normalizeText(query);
 
   if (!cleanQuery) {
     searchResults.innerHTML = "";
@@ -180,48 +290,68 @@ function renderSearchResults(query) {
   }
 
   const matches = siteLinks.filter((item) => {
-    return (
-      item.name.toLowerCase().includes(cleanQuery) ||
-      item.slug.toLowerCase().includes(cleanQuery) ||
-      item.description.toLowerCase().includes(cleanQuery)
-    );
+    const haystack = `${item.name} ${item.slug} ${item.description}`.toLowerCase();
+    return haystack.includes(cleanQuery);
   });
 
-  if (!matches.length) {
-    searchResults.innerHTML = `
-      <div class="result-card empty">
-        <h3>No results found for "${query}"</h3>
-        <p>Try searching for classroom, racing, arcade, or games.</p>
-      </div>
-    `;
-    return;
-  }
+  const recommendedGames = getRecommendedGames(cleanQuery);
 
-  searchResults.innerHTML = matches
+  const gameCards = recommendedGames
+    .slice(0, 6)
     .map(
-      (item) => `
-        <div class="result-card">
+      (game) => `
+        <div class="result-card game-search-card">
           <div>
-            <p class="result-kind">Site result</p>
-            <h3>${item.name}</h3>
-            <p>${item.description}</p>
+            <p class="result-kind">Game match</p>
+            <h3>${game.title}</h3>
+            <p>${game.genre} • ${game.difficulty}</p>
           </div>
-          <a href="${item.url}" target="_blank" rel="noreferrer">Open</a>
+          <a href="#" target="_blank" rel="noreferrer">Play</a>
         </div>
       `
     )
     .join("");
+
+  const siteCards = matches.length
+    ? matches
+        .map(
+          (item) => `
+            <div class="result-card">
+              <div>
+                <p class="result-kind">Site result</p>
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+              </div>
+              <a href="${item.url}" target="_blank" rel="noreferrer">Open</a>
+            </div>
+          `
+        )
+        .join("")
+    : "";
+
+  searchResults.innerHTML = `
+    ${siteCards || ""}
+    ${gameCards || ""}
+    ${!siteCards && !gameCards ? `<div class="result-card empty"><h3>No results found for "${query}"</h3><p>Try racing, horror, puzzle, sports, arcade, or action.</p></div>` : ""}
+  `;
+
+  if (recommendedGames.length) {
+    renderGames(recommendedGames);
+  }
 }
 
 function loadGames() {
-  const randomSelection = shuffleGames(gameLibrary).slice(0, 12);
-  renderGames(randomSelection);
+  renderGames(shuffleGames(gameLibrary).slice(0, 12));
 }
 
 if (button) {
   button.addEventListener("click", () => {
-    const randomSelection = shuffleGames(gameLibrary).slice(0, 12);
-    renderGames(randomSelection);
+    const query = searchInput ? searchInput.value : "";
+    if (query.trim()) {
+      renderSearchResults(query);
+    } else {
+      loadGames();
+    }
   });
 }
 
