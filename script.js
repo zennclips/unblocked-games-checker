@@ -74,6 +74,27 @@ const suffixes = [
   " DX"
 ];
 
+const siteLinks = [
+  {
+    name: "Classroom 80x",
+    slug: "classroom",
+    url: "https://sites.google.com/view/classroomx6/classroom-80x",
+    description: "School portal link"
+  },
+  {
+    name: "GameLoop Arcade",
+    slug: "arcade",
+    url: "#",
+    description: "Fast-paced browser games"
+  },
+  {
+    name: "Racing Hub",
+    slug: "racing",
+    url: "#",
+    description: "Cars, drift maps, and speed games"
+  }
+];
+
 function generateGameLibrary(count = 1200) {
   const games = [];
 
@@ -100,6 +121,9 @@ const grid = document.getElementById("gameGrid");
 const button = document.getElementById("findGamesBtn");
 const availableCount = document.getElementById("availableCount");
 const gameCountLabel = document.getElementById("gameCountLabel");
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const searchResults = document.getElementById("searchResults");
 
 function shuffleGames(items) {
   const array = [...items];
@@ -145,6 +169,50 @@ function renderGames(selectedGames) {
   }
 }
 
+function renderSearchResults(query) {
+  if (!searchResults) return;
+
+  const cleanQuery = query.trim().toLowerCase();
+
+  if (!cleanQuery) {
+    searchResults.innerHTML = "";
+    return;
+  }
+
+  const matches = siteLinks.filter((item) => {
+    return (
+      item.name.toLowerCase().includes(cleanQuery) ||
+      item.slug.toLowerCase().includes(cleanQuery) ||
+      item.description.toLowerCase().includes(cleanQuery)
+    );
+  });
+
+  if (!matches.length) {
+    searchResults.innerHTML = `
+      <div class="result-card empty">
+        <h3>No results found for "${query}"</h3>
+        <p>Try searching for classroom, racing, arcade, or games.</p>
+      </div>
+    `;
+    return;
+  }
+
+  searchResults.innerHTML = matches
+    .map(
+      (item) => `
+        <div class="result-card">
+          <div>
+            <p class="result-kind">Site result</p>
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+          </div>
+          <a href="${item.url}" target="_blank" rel="noreferrer">Open</a>
+        </div>
+      `
+    )
+    .join("");
+}
+
 function loadGames() {
   const randomSelection = shuffleGames(gameLibrary).slice(0, 12);
   renderGames(randomSelection);
@@ -154,6 +222,15 @@ if (button) {
   button.addEventListener("click", () => {
     const randomSelection = shuffleGames(gameLibrary).slice(0, 12);
     renderGames(randomSelection);
+  });
+}
+
+if (searchBtn && searchInput) {
+  searchBtn.addEventListener("click", () => renderSearchResults(searchInput.value));
+  searchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      renderSearchResults(searchInput.value);
+    }
   });
 }
 
